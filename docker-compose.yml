@@ -24,7 +24,7 @@ services:
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
       - TOKEN_SECRET=${CHRONOGRAPH_TOKEN_SECRET}
-    depends:
+    depends_on:
       - influxdb
 
   grafana:
