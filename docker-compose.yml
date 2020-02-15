@@ -23,6 +23,9 @@ services:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+      - TOKEN_SECRET=${CHRONOGRAPH_TOKEN_SECRET}
+    depends:
+      - influxdb
 
   grafana:
     image: grafana/grafana:6.6.1
