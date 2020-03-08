@@ -1,11 +1,33 @@
 version: '3.7'
 services:
+  reverse-proxy:
+    image: traefik:v2.1
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      # The HTTPs port
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./letsencrypt:/letsencrypt"
   influxdb:
     image: influxdb:1.7.9
     ports:
       - '8086:8086'
     volumes:
       - influxdb-storage:/var/lib/influxdb
+    labels:
+      - "traefik.http.routers.influxdb.rule=Host(`stats.naturbana.org`)"
     environment:
       - INFLUXDB_DB=naturbana
       - INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER}
@@ -19,6 +41,9 @@ services:
       - '8888:8888'
     volumes:
       - chronograf-storage:/var/lib/chronograf
+    labels:
+      - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
+      - "traefik.http.routers.chronograf.tls=true"
     environment:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
@@ -33,11 +58,31 @@ services:
       - influxdb
 
   grafana:
-    image: grafana/grafana:6.6.1
+    image: grafana/grafana:6.6.2
     ports:
       - '3000:3000'
     volumes:
       - grafana-storage:/var/lib/grafana
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+    environment:
+      - GF_INSTALL_PLUGINS=andig-darksky-datasource
+      - GF_SERVER_ENABLE_GZIP=true
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1m
+      #- GF_SMTP_ENABLED=true
+      #- GF_SMTP_HOST
+      #- GF_SMTP_USER
+      #- GF_SMTP_PASSWORD
+      #- GF_SMTP_FROM_ADDRESS
+      #- GF_SMTP_FROM_NAME
+      - GF_LOG_MODE=console
+      - GF_LOG_LEVEL=info
 
 volumes:
   influxdb-storage:
