@@ -20,6 +20,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - "./letsencrypt:/letsencrypt"
+      
   influxdb:
     image: influxdb:1.7.9
     ports:
@@ -42,8 +43,10 @@ services:
     volumes:
       - /opt/chronograf/storage:/var/lib/chronograf
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
-      - "traefik.http.routers.chronograf.tls=true"
+      - "traefik.http.routers.chronograf.entrypoints=websecure"
+      - "traefik.http.routers.chronograf.tls.certresolver=myresolver"
     environment:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
@@ -51,7 +54,7 @@ services:
       - TOKEN_SECRET=${CHRONOGRAPH_TOKEN_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - PUBLIC_URL=${PUBLIC_URL}
+      - PUBLIC_URL=${CHRONOGRAF_PUBLIC_URL}
       - GOOGLE_DOMAINS=${GOOGLE_DOMAINS}
 
     depends_on:
@@ -59,6 +62,7 @@ services:
 
   grafana:
     image: grafana/grafana:6.6.2
+    user: ${GRAFANA_USER_ID}
     ports:
       - '3000:3000'
     volumes:
