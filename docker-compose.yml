@@ -25,7 +25,7 @@ services:
     ports:
       - '8086:8086'
     volumes:
-      - influxdb-storage:/var/lib/influxdb
+      - /opt/influxdb/storage:/var/lib/influxdb
     labels:
       - "traefik.http.routers.influxdb.rule=Host(`stats.naturbana.org`)"
     environment:
@@ -40,7 +40,7 @@ services:
     ports:
       - '8888:8888'
     volumes:
-      - chronograf-storage:/var/lib/chronograf
+      - /opt/chronograf/storage:/var/lib/chronograf
     labels:
       - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
       - "traefik.http.routers.chronograf.tls=true"
@@ -62,7 +62,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - /opt/grafana/storage:/var/lib/grafana
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
@@ -83,8 +83,3 @@ services:
       #- GF_SMTP_FROM_NAME
       - GF_LOG_MODE=console
       - GF_LOG_LEVEL=info
-
-volumes:
-  influxdb-storage:
-  grafana-storage:
-  chronograf-storage:
