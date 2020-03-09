@@ -3,13 +3,13 @@ services:
   reverse-proxy:
     image: traefik:v2.1
     command:
-      - "--log.level=DEBUG"
+      #- "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -20,7 +20,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - "./letsencrypt:/letsencrypt"
-      
+
   influxdb:
     image: influxdb:1.7.9
     ports:
@@ -38,8 +38,8 @@ services:
 
   chronograf:
     image: chronograf:1.7.16
-    ports:
-      - '8888:8888'
+    #ports:
+    #  - '8888:8888'
     volumes:
       - /opt/chronograf/storage:/var/lib/chronograf
     labels:
@@ -47,6 +47,7 @@ services:
       - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
       - "traefik.http.routers.chronograf.entrypoints=websecure"
       - "traefik.http.routers.chronograf.tls.certresolver=myresolver"
+      - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
     environment:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
@@ -56,15 +57,14 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - PUBLIC_URL=${CHRONOGRAF_PUBLIC_URL}
       - GOOGLE_DOMAINS=${GOOGLE_DOMAINS}
-
     depends_on:
       - influxdb
 
   grafana:
     image: grafana/grafana:6.6.2
     user: ${GRAFANA_USER_ID}
-    ports:
-      - '3000:3000'
+    #ports:
+    #  - '3000:3000'
     volumes:
       - /opt/grafana/storage:/var/lib/grafana
     labels:
@@ -72,6 +72,7 @@ services:
       - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     environment:
       - GF_INSTALL_PLUGINS=andig-darksky-datasource
       - GF_SERVER_ENABLE_GZIP=true
@@ -87,3 +88,5 @@ services:
       #- GF_SMTP_FROM_NAME
       - GF_LOG_MODE=console
       - GF_LOG_LEVEL=info
+    depends_on:
+      - influxdb
