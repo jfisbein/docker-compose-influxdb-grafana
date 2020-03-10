@@ -8,17 +8,16 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:80"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      # The HTTPs port
       - "443:443"
-      # The Web UI
-      - "8080:8080"
+      - "80:80"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "/var/run/docker.sock:/var/run/docker.sock"
       - "./letsencrypt:/letsencrypt"
     # Dynamic Configuration
     labels:
@@ -29,7 +28,7 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
       - "traefik.http.routers.redirs.middlewares=https-redirectscheme"
       - "traefik.http.middlewares.https-redirectscheme.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.https-redirectscheme.redirectscheme.permanent=true"  
+      - "traefik.http.middlewares.https-redirectscheme.redirectscheme.permanent=true"
 
   influxdb:
     image: influxdb:1.7.9
