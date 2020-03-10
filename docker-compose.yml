@@ -24,11 +24,12 @@ services:
     labels:
       - "traefik.http.routers.api.rule=Host(`traefik.naturbana.org`)"
       - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
+      - "traefik.http.routers.redirs.middlewares=https-redirectscheme"
       - "traefik.http.middlewares.https-redirectscheme.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.https-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.http.middlewares.https-redirectscheme.redirectscheme.permanent=true"  
 
   influxdb:
     image: influxdb:1.7.9
