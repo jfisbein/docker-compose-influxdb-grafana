@@ -9,10 +9,10 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.address=:80"
-      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.leresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.leresolver.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--api=true"
     ports:
       - "443:443"
@@ -22,9 +22,9 @@ services:
       - "./letsencrypt:/letsencrypt"
     # Dynamic Configuration
     labels:
-      - "traefik.http.routers.traefik.rule=Host(`traefik.naturbana.org`)"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.tls.certresolver=leresolver"
+      - "traefik.http.routers.router0.rule=Host(`traefik.naturbana.org`)"
+      - "traefik.http.routers.router0.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
@@ -60,7 +60,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
       - "traefik.http.routers.chronograf.entrypoints=websecure"
-      - "traefik.http.routers.chronograf.tls.certresolver=leresolver"
+      - "traefik.http.routers.chronograf.tls.certresolver=letsencrypt"
       - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
     environment:
       - INFLUXDB_URL=http://influxdb:8086
@@ -85,7 +85,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
-      - "traefik.http.routers.grafana.tls.certresolver=leresolver"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     environment:
       - GF_INSTALL_PLUGINS=andig-darksky-datasource
