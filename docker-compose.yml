@@ -4,7 +4,7 @@ services:
     image: traefik:v2.1
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
+      # - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
@@ -15,11 +15,18 @@ services:
     ports:
       # The HTTPs port
       - "443:443"
-      # The Web UI (enabled by --api.insecure=true)
+      # The Web UI
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - "./letsencrypt:/letsencrypt"
+    # Dynamic Configuration
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.naturbana.org`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
 
   influxdb:
     image: influxdb:1.7.9
