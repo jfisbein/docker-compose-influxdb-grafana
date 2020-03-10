@@ -13,6 +13,7 @@ services:
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--api=true"
     ports:
       - "443:443"
       - "80:80"
@@ -21,12 +22,13 @@ services:
       - "./letsencrypt:/letsencrypt"
     # Dynamic Configuration
     labels:
-      - "traefik.http.routers.api.rule=Host(`traefik.naturbana.org`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.tls.certresolver=myresolver"
-      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.naturbana.org`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
-      - "traefik.http.routers.redirs.middlewares=https-redirectscheme"
+      - "traefik.http.routers.http-catchall.middlewares=https-redirectscheme"
       - "traefik.http.middlewares.https-redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirectscheme.redirectscheme.permanent=true"
 
