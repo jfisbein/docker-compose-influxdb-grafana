@@ -55,6 +55,8 @@ services:
       - "traefik.http.routers.chronograf.entrypoints=websecure"
       - "traefik.http.routers.chronograf.tls.certresolver=myresolver"
       - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
+      - "traefik.http.middlewares.chronograf-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.chronograf-redirectscheme.redirectscheme.permanent=true"
     environment:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
@@ -80,6 +82,8 @@ services:
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.grafana-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.grafana-redirectscheme.redirectscheme.permanent=true"
     environment:
       - GF_INSTALL_PLUGINS=andig-darksky-datasource
       - GF_SERVER_ENABLE_GZIP=true
