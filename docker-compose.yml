@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   reverse-proxy:
     image: traefik:v2.1
@@ -33,7 +33,6 @@ services:
       - traefik.http.routers.http_catchall.middlewares=https_redirect
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
-    depends_on: [reverse-proxy]
 
   influxdb:
     image: influxdb:1.7.9
@@ -49,6 +48,7 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
       - INFLUXDB_READ_USER=${INFLUXDB_READ_USER}
       - INFLUXDB_READ_USER_PASSWORD=${INFLUXDB_READ_USER_PASSWORD}
+    depends_on: [reverse-proxy]
 
   chronograf:
     image: chronograf:1.7.16
@@ -84,7 +84,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
-      - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     environment:
