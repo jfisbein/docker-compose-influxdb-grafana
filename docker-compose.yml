@@ -15,6 +15,8 @@ services:
       - "--metrics.influxdb=true"
       - "--metrics.influxdb.address=influxdb:8086"
       - "--metrics.influxdb.database=traefik"
+      - "--metrics.influxdb.username=${INFLUXDB_WRITE_USER}"
+      - "--metrics.influxdb.password=${INFLUXDB_WRITE_USER_PASSWORD}"
     ports:
       - "443:443"
       - "80:80"
@@ -59,6 +61,8 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
       - INFLUXDB_READ_USER=${INFLUXDB_READ_USER}
       - INFLUXDB_READ_USER_PASSWORD=${INFLUXDB_READ_USER_PASSWORD}
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     depends_on: [reverse-proxy]
 
   chronograf:
