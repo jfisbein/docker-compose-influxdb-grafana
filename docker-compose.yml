@@ -12,6 +12,9 @@ services:
       - "--certificatesResolvers.letsencrypt.acme.tlsChallenge=true"
       - "--certificatesResolvers.letsencrypt.acme.httpChallenge=true"
       - "--certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=web"
+      - "--metrics.influxdb=true"
+      - "--metrics.influxdb.address=influxdb:8086"
+      - "--metrics.influxdb.database=traefik"
     ports:
       - "443:443"
       - "80:80"
