@@ -36,7 +36,10 @@ services:
       - "traefik.http.routers.api.rule=Host(`traefik.naturbana.org`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$fRPF2svFNbcoenyCorOaaunoF7nKqu/EawT3uj.VQ47/MyGAnJeGq"
+      - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
+
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.api.entrypoints=websecure"
 
 
   influxdb:
