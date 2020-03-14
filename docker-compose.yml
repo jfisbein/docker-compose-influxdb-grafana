@@ -42,6 +42,7 @@ services:
       - '8086:8086'
     volumes:
       - /opt/influxdb/storage:/var/lib/influxdb
+      - /opt/influxdb/backups:/var/tmp/backups
     labels:
       - "traefik.http.routers.influxdb.rule=Host(`stats.naturbana.org`)"
     environment:
