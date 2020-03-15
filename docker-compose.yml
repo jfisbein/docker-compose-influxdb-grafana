@@ -2,6 +2,7 @@ version: "3.7"
 services:
   reverse-proxy:
     image: traefik:v2.1
+    restart: unless-stopped
     command:
       - "--api.dashboard=true"
       - "--providers.docker=true"
@@ -38,6 +39,7 @@ services:
 
   influxdb:
     image: influxdb:1.7.9
+    restart: unless-stopped
     ports:
       - '8086:8086'
     volumes:
@@ -65,6 +67,7 @@ services:
 
   chronograf:
     image: chronograf:1.7.17
+    restart: unless-stopped
     volumes:
       - /opt/chronograf/storage:/var/lib/chronograf
     labels:
@@ -84,10 +87,11 @@ services:
       - PUBLIC_URL=${CHRONOGRAF_PUBLIC_URL}
       - GOOGLE_DOMAINS=${GOOGLE_DOMAINS}
       - REPORTING_DISABLED=true
-    depends_on: [influxdb]
+    depends_on: [influxdb, kapacitor]
 
   grafana:
     image: grafana/grafana:6.6.2
+    restart: unless-stopped
     user: ${GRAFANA_USER_ID}
     volumes:
       - /opt/grafana/storage:/var/lib/grafana
@@ -120,6 +124,7 @@ services:
 
   kapacitor:
     image: kapacitor:1.5.4
+    restart: unless-stopped
     volumes:
       - /opt/kapacitor/storage:/var/lib/kapacitor
     environment:
