@@ -53,6 +53,8 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
       - INFLUXDB_READ_USER=${INFLUXDB_READ_USER}
       - INFLUXDB_READ_USER_PASSWORD=${INFLUXDB_READ_USER_PASSWORD}
+      - INFLUXDB_WRITE_USER=${INFLUXDB_READ_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_READ_USER_PASSWORD}
       - INFLUXDB_REPORTING_DISABLED=true
       - INFLUXDB_DATA_QUERY_LOG_ENABLED=false
       # Enable UDP to receive stats from traefik. port not visible from outside.
@@ -114,3 +116,13 @@ services:
       - GF_LOG_MODE=console
       - GF_LOG_LEVEL=info
     depends_on: [influxdb]
+
+  kapacitor:
+    image: kapacitor:1.5.4
+    volumes:
+      - /opt/kapacitor/storage:/var/lib/kapacitor
+    environment:
+      # https://docs.influxdata.com/kapacitor/v1.5/administration/configuration/#kapacitor-environment-variables
+      - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
+      - KAPACITOR_INFLUXDB_0_USERNAME=${INFLUXDB_WRITE_USER}
+      - KAPACITOR_INFLUXDB_0_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
