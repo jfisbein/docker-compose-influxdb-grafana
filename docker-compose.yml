@@ -125,7 +125,7 @@ services:
     environment:
       # https://docs.influxdata.com/kapacitor/v1.5/administration/configuration/#kapacitor-environment-variables
       - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
-      - KAPACITOR_INFLUXDB_0_USERNAME=${INFLUXDB_WRITE_USER}
-      - KAPACITOR_INFLUXDB_0_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
+      - KAPACITOR_INFLUXDB_0_USERNAME=${INFLUXDB_ADMIN_USER}
+      - KAPACITOR_INFLUXDB_0_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
       - KAPACITOR_HTTP_SHARED_SECRET=${INFLUXDB_HTTP_SHARED_SECRET}
     depends_on: [influxdb]
