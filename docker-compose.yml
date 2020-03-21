@@ -138,7 +138,7 @@ services:
       - KAPACITOR_SLACK_0_USERNAME=kapacitor
       # Telegram integration
       - KAPACITOR_TELEGRAM_ENABLED=true
-      - KAPACITOR_TELEGRAM_URL="https://api.telegram.org/bot"
+      - KAPACITOR_TELEGRAM_URL=https://api.telegram.org/bot
       - KAPACITOR_TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - KAPACITOR_TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     depends_on: [influxdb]
