@@ -76,16 +76,13 @@ services:
       - "traefik.http.routers.chronograf.entrypoints=websecure"
       - "traefik.http.routers.chronograf.tls.certresolver=letsencrypt"
       - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
+      - "traefik.http.routers.chronograf.middlewares=auth"
+      - "traefik.http.middlewares.chronograf-auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
     environment:
       # https://docs.influxdata.com/chronograf/v1.7/administration/config-options/#chronograf-service-options
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
-      - TOKEN_SECRET=${CHRONOGRAPH_TOKEN_SECRET}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - PUBLIC_URL=${CHRONOGRAF_PUBLIC_URL}
-      - GOOGLE_DOMAINS=${GOOGLE_DOMAINS}
       - REPORTING_DISABLED=true
     depends_on: [influxdb, kapacitor]
 
@@ -141,7 +138,7 @@ services:
       - KAPACITOR_SLACK_0_USERNAME=kapacitor
       # Telegram integration
       - KAPACITOR_TELEGRAM_ENABLED=true
-      - KAPACITOR_TELEGRAM_URL="https://api.telegram.org/bot"
+      - KAPACITOR_TELEGRAM_URL=https://api.telegram.org/bot
       - KAPACITOR_TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - KAPACITOR_TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     depends_on: [influxdb]
