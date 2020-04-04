@@ -79,10 +79,11 @@ services:
       - "traefik.http.routers.chronograf.middlewares=auth"
       - "traefik.http.middlewares.chronograf-auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
     environment:
-      # https://docs.influxdata.com/chronograf/v1.7/administration/config-options/#chronograf-service-options
+      # https://docs.influxdata.com/chronograf/v1.8/administration/config-options/#chronograf-service-options
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=${INFLUXDB_ADMIN_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+      - KAPACITOR_URL=http://kapacitor:9092
       - REPORTING_DISABLED=true
     depends_on: [influxdb, kapacitor]
 
