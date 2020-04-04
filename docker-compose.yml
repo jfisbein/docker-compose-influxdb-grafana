@@ -76,7 +76,7 @@ services:
       - "traefik.http.routers.chronograf.entrypoints=websecure"
       - "traefik.http.routers.chronograf.tls.certresolver=letsencrypt"
       - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
-      - "traefik.http.routers.chronograf.middlewares=auth"
+      - "traefik.http.routers.chronograf.middlewares=chronograf-auth"
       - "traefik.http.middlewares.chronograf-auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
     environment:
       # https://docs.influxdata.com/chronograf/v1.8/administration/config-options/#chronograf-service-options
@@ -124,6 +124,8 @@ services:
     restart: unless-stopped
     volumes:
       - /opt/kapacitor/storage:/var/lib/kapacitor
+    labels:
+      - "traefik.enable=false"
     environment:
       # https://docs.influxdata.com/kapacitor/v1.5/administration/configuration/#kapacitor-environment-variables
       - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
