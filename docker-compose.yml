@@ -30,7 +30,7 @@ services:
       - "traefik.http.routers.http_catchall.middlewares=https_redirect"
       - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.naturbana.org`)"
+      - "traefik.http.routers.api.rule=Host(`traefik.${BASE_DOMAIN}`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
@@ -46,7 +46,7 @@ services:
       - /opt/influxdb/storage:/var/lib/influxdb
       - /opt/influxdb/backups:/var/tmp/backups
     labels:
-      - "traefik.http.routers.influxdb.rule=Host(`stats.naturbana.org`)"
+      - "traefik.http.routers.influxdb.rule=Host(`stats.${BASE_DOMAIN}`)"
     environment:
       # https://docs.influxdata.com/influxdb/v1.7/administration/config/#influxdb-environment-variables-influxdb
       - INFLUXDB_DB=naturbana
@@ -72,7 +72,7 @@ services:
       - /opt/chronograf/storage:/var/lib/chronograf
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.chronograf.rule=Host(`chronograf.naturbana.org`)"
+      - "traefik.http.routers.chronograf.rule=Host(`chronograf.${BASE_DOMAIN}`)"
       - "traefik.http.routers.chronograf.entrypoints=websecure"
       - "traefik.http.routers.chronograf.tls.certresolver=letsencrypt"
       - "traefik.http.services.chronograf.loadbalancer.server.port=8888"
@@ -95,13 +95,12 @@ services:
       - /opt/grafana/storage:/var/lib/grafana
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.naturbana.org`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${BASE_DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     environment:
       # https://grafana.com/docs/grafana/latest/installation/configuration/#configure-with-environment-variables
-      #- GF_SERVER_DOMAIN=grafana.naturbana.org
       - GF_SERVER_ROOT_URL=https://grafana.${BASE_DOMAIN}/
       - GF_SERVER_ENABLE_GZIP=true
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
