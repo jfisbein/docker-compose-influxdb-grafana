@@ -66,7 +66,7 @@ services:
     depends_on: [reverse-proxy]
 
   chronograf:
-    image: chronograf:1.7.17
+    image: chronograf:1.8.0
     restart: unless-stopped
     volumes:
       - /opt/chronograf/storage:/var/lib/chronograf
