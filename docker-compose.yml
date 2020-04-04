@@ -38,7 +38,7 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
 
   influxdb:
-    image: influxdb:1.7.9
+    image: influxdb:1.7.10
     restart: unless-stopped
     ports:
       - '8086:8086'
