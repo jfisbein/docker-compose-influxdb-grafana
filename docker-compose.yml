@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   reverse-proxy:
-    image: traefik:2.2.0
+    image: traefik:2.2
     restart: unless-stopped
     command:
       - "--api.dashboard=true"
@@ -38,7 +38,7 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
 
   influxdb:
-    image: influxdb:1.7.10
+    image: influxdb:1.8
     restart: unless-stopped
     ports:
       - '8086:8086'
@@ -66,7 +66,7 @@ services:
     depends_on: [reverse-proxy]
 
   chronograf:
-    image: chronograf:1.8.0
+    image: chronograf:1.8
     restart: unless-stopped
     volumes:
       - /opt/chronograf/storage:/var/lib/chronograf
@@ -93,6 +93,8 @@ services:
     user: ${GRAFANA_USER_ID}
     volumes:
       - /opt/grafana/storage:/var/lib/grafana
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.${BASE_DOMAIN}`)"
@@ -120,7 +122,7 @@ services:
     depends_on: [influxdb]
 
   kapacitor:
-    image: kapacitor:1.5.4
+    image: kapacitor:1.5
     restart: unless-stopped
     volumes:
       - /opt/kapacitor/storage:/var/lib/kapacitor
