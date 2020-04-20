@@ -8,7 +8,7 @@ services:
       - "--providers.docker=true"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--certificatesResolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--certificatesResolvers.letsencrypt.acme.email=${LETSENCRYPT_USER}"
       - "--certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--certificatesResolvers.letsencrypt.acme.tlsChallenge=true"
       - "--certificatesResolvers.letsencrypt.acme.httpChallenge=true"
