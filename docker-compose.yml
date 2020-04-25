@@ -156,7 +156,7 @@ services:
     restart: unless-stopped
     volumes:
       - /opt/smtp-gmail-api/credentials.json:/tmp/credentials.json
-      - /opt/smtp-gmail-api/token:/tmp/token
+      - /opt/smtp-gmail-api/tokens:/tmp/tokens
     labels:
       - "traefik.enable=false"
-    cmd: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/token
+    cmd: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/tokens
