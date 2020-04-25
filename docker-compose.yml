@@ -152,11 +152,11 @@ services:
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
   mail-server:
-    image: jfisbein/smtp-gmail-api:0.0.2
+    image: jfisbein/smtp-gmail-api:0.0.3
     restart: unless-stopped
     volumes:
       - /opt/smtp-gmail-api/credentials.json:/tmp/credentials.json
       - /opt/smtp-gmail-api/tokens:/tmp/tokens
     labels:
       - "traefik.enable=false"
-    command: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/tokens
+    command: ["--port", ${SMTP_PORT}, "--credentials", "/tmp/credentials.json", "--tokens", "/tmp/tokens"]
