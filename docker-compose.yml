@@ -159,4 +159,4 @@ services:
       - /opt/smtp-gmail-api/tokens:/tmp/tokens
     labels:
       - "traefik.enable=false"
-    cmd: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/tokens
+    command: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/tokens
