@@ -144,10 +144,10 @@ services:
       - KAPACITOR_TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - KAPACITOR_TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
       # Email integration
-      - KAPACITOR_EMAIL_ENABLED=true
-      - KAPACITOR_EMAIL_HOST=${SMTP_HOST}
-      - KAPACITOR_EMAIL_PORT=${SMTP_PORT}
-      - KAPACITOR_EMAIL_FROM=${EMAIL_FROM}
+      - KAPACITOR_SMTP_ENABLED=true
+      - KAPACITOR_SMTP_HOST=${SMTP_HOST}
+      - KAPACITOR_SMTP_PORT=${SMTP_PORT}
+      - KAPACITOR_SMTP_FROM=${EMAIL_FROM}
     depends_on: [influxdb]
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
