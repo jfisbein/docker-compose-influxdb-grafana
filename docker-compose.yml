@@ -113,10 +113,8 @@ services:
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1m
       - GF_SMTP_ENABLED=true
       - GF_SMTP_HOST=${SMTP_HOST}:${SMTP_PORT}
-      - GF_SMTP_USER=${SMTP_USER}
-      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
-      - GF_SMTP_FROM_ADDRESS=${SMTP_USER}
-      - GF_SMTP_FROM_NAME=${SMTP_FROM_NAME}
+      - GF_SMTP_FROM_ADDRESS=${EMAIL_FROM}
+      - GF_SMTP_FROM_NAME=${EMAIL_FROM_NAME}
       - GF_LOG_MODE=console
       - GF_LOG_LEVEL=info
     depends_on: [influxdb]
@@ -149,8 +147,16 @@ services:
       - KAPACITOR_EMAIL_ENABLED=true
       - KAPACITOR_EMAIL_HOST=${SMTP_HOST}
       - KAPACITOR_EMAIL_PORT=${SMTP_PORT}
-      - KAPACITOR_EMAIL_USERNAME=${SMTP_USER}
-      - KAPACITOR_EMAIL_PASSWORD=${SMTP_PASSWORD}
-      - KAPACITOR_EMAIL_FROM=${SMTP_USER}
-      - KAPACITOR_EMAIL_NO_VERIFY=false
+      - KAPACITOR_EMAIL_FROM=${EMAIL_FROM}
     depends_on: [influxdb]
+
+  ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
+  mail-server:
+    image: jfisbein/smtp-gmail-api:0.0.2
+    restart: unless-stopped
+    volumes:
+      - /opt/smtp-gmail-api/credentials.json:/tmp/credentials.json
+      - /opt/smtp-gmail-api/token:/tmp/token
+    labels:
+      - "traefik.enable=false"
+    cmd: --port ${SMTP_PORT} --credentials /tmp/credentials.json --token /tmp/token
