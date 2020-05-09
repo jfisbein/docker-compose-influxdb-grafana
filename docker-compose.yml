@@ -151,6 +151,17 @@ services:
       - KAPACITOR_SMTP_FROM=${EMAIL_FROM}
     depends_on: [influxdb]
 
+  cadvisor:
+    image: google/cadvisor:v0.32.0
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb:8086 -storage_driver_user=${INFLUXDB_WRITE_USER} -storage_driver_password=${INFLUXDB_WRITE_PASSWORD}
+    depends_on: [influxdb]
+    
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
   mail-server:
     image: jfisbein/smtp-gmail-api:0.0.3
