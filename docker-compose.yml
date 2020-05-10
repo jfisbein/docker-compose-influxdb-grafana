@@ -172,16 +172,12 @@ services:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_PASSWORD}
     command:
-      - sh
-      - -c
-      - /usr/bin/cadvisor
       - --docker_only=true
       - --storage_driver=influxdb
       - --storage_driver_db=cadvisor
       - --storage_driver_host=influxdb:8086
       - --storage_driver_user=${INFLUXDB_WRITE_USER}
-      - --storage_driver_password=${INFLUXDB_WRITE_PASSWORD}
-      ## - --v=2
+      - --storage_driver_password=${INFLUXDB_WRITE_USER_PASSWORD}
     depends_on: [influxdb]
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
