@@ -172,6 +172,9 @@ services:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_PASSWORD}
     command:
+      - sh
+      - -c
+      - /usr/bin/cadvisor
       - --docker_only=true
       - --storage_driver=influxdb
       - --storage_driver_db=cadvisor
