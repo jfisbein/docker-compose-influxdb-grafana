@@ -159,6 +159,7 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`cadvisor.${BASE_DOMAIN}`)"
@@ -168,7 +169,14 @@ services:
     environment:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_PASSWORD}
-    command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb:8086 -storage_driver_user=${INFLUXDB_WRITE_USER} -storage_driver_password=${INFLUXDB_WRITE_PASSWORD}
+    command:
+      - --docker_only=true
+      - --storage_driver=influxdb
+      - --storage_driver_db=cadvisor
+      - --storage_driver_host=influxdb:8086
+      - --storage_driver_user=${INFLUXDB_WRITE_USER}
+      - --storage_driver_password=${INFLUXDB_WRITE_PASSWORD}
+      ## - --v=2
     depends_on: [influxdb]
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
