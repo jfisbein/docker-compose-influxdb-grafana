@@ -178,6 +178,7 @@ services:
       - --storage_driver_host=influxdb:8086
       - --storage_driver_user=${INFLUXDB_WRITE_USER}
       - --storage_driver_password=${INFLUXDB_WRITE_USER_PASSWORD}
+      - --storage_driver_influxdb_retention_policy=monitor
     depends_on: [influxdb]
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
