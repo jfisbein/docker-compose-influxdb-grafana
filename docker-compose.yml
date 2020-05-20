@@ -177,7 +177,7 @@ services:
       - "traefik.http.middlewares.cadvisor-auth.basicauth.users=joan:$$2y$$05$$LJEWyCCFuKVJ/rrDj/H8g.wHsjml8LyM8BjRlo.QHxmpn8qZzJwH6"
     environment:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
-      - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_PASSWORD}
+      - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     command:
       - --docker_only=true
       - --storage_driver=influxdb
