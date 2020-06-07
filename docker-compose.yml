@@ -168,6 +168,18 @@ services:
     environment:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
+    depends_on: [influxdb]
+
+
+  telegraf-owm:
+    image: telegraf:1.14
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./telegraf/telegraf-owm.conf:/etc/telegraf/telegraf.conf:ro
+    environment:
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
       - OPEN_WEATHER_MAP_API_KEY=${OPEN_WEATHER_MAP_API_KEY}
     depends_on: [influxdb]
 
