@@ -205,6 +205,7 @@ services:
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     command:
+      # https://github.com/google/cadvisor/blob/master/docs/runtime_options.md
       - --docker_only=true
       - --storage_driver=influxdb
       - --storage_driver_db=cadvisor
