@@ -1,5 +1,6 @@
 version: "3.7"
 services:
+
   reverse-proxy:
     image: traefik:2.2
     restart: unless-stopped
@@ -37,6 +38,7 @@ services:
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.api.entrypoints=websecure"
 
+
   influxdb:
     image: influxdb:1.8
     restart: unless-stopped
@@ -66,6 +68,7 @@ services:
       - INFLUXDB_UDP_DATABASE=traefik
     depends_on: [reverse-proxy]
 
+
   chronograf:
     image: chronograf:1.8
     restart: unless-stopped
@@ -87,6 +90,7 @@ services:
       - KAPACITOR_URL=http://kapacitor:9092
       - REPORTING_DISABLED=true
     depends_on: [influxdb, kapacitor]
+
 
   grafana:
     image: grafana/grafana:7.1.1
@@ -123,9 +127,11 @@ services:
       - GF_LOG_FILTERS=rendering:debug
     depends_on: [influxdb]
 
+
   renderer:
     image: grafana/grafana-image-renderer:2.0.0
     restart: unless-stopped
+
 
   kapacitor:
     image: kapacitor:1.5
@@ -159,6 +165,7 @@ services:
     depends_on: [influxdb]
 
 
+# Telegraf instance to get usage information about running docker containers
   telegraf:
     image: telegraf:1.14
     restart: unless-stopped
@@ -171,6 +178,7 @@ services:
     depends_on: [influxdb]
 
 
+  # Telegraf instance to get weather information for open-weather-map and store it in influxdb
   telegraf-owm:
     image: telegraf:1.15.1
     restart: unless-stopped
@@ -214,6 +222,7 @@ services:
       - --storage_driver_password=${INFLUXDB_WRITE_USER_PASSWORD}
       - --storage_driver_influxdb_retention_policy=monitor
     depends_on: [influxdb]
+
 
   ## As my host provider does not allow me to send emails using SMTP y developed a smtp-to-gmail-api gateway
   mail-server:
