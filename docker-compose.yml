@@ -93,7 +93,7 @@ services:
 
 
   grafana:
-    image: grafana/grafana:7.1.1
+    image: grafana/grafana:7.1.5
     restart: unless-stopped
     user: ${GRAFANA_USER_ID}
     volumes:
