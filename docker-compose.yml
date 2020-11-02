@@ -193,7 +193,7 @@ services:
 
 
   cadvisor:
-    image: google/cadvisor:v0.33.0
+    image: gcr.io/cadvisor/cadvisor:v0.36.0
     restart: unless-stopped
     volumes:
       - /:/rootfs:ro
