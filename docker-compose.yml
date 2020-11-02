@@ -180,7 +180,7 @@ services:
 
   # Telegraf instance to get weather information for open-weather-map and store it in influxdb
   telegraf-owm:
-    image: telegraf:1.15
+    image: telegraf:1.16
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
